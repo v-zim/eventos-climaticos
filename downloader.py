@@ -71,11 +71,11 @@ def extrair_dados():
                 print(f"Baixando arquivo {nome_zip}...")
 
                 # Deletar parquet do ano atual, caso exista
-                if os.path.exists(f"{PASTA_PARQUETS}/{ano}.parquet"):
+                if os.path.isfile(f"{PASTA_PARQUETS}/{ano}.parquet"):
                     os.remove(f"{PASTA_PARQUETS}/{ano}.parquet")
 
                 # Aguardar conclusão do download
-                while not os.path.exists(caminho_arquivo):
+                while not os.path.isfile(caminho_arquivo):
                     time.sleep(1)
                 
                 print("Download completo.")

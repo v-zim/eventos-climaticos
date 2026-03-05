@@ -10,15 +10,4 @@ downloader.extrair_dados()
 
 # Gerar DF unificado
 df = pm.gerar_df_unificado()
-
 print(df.describe())
-
-
-
-# 5. Feature Engineering
-
-# 6. Modeling (if prediction is your next step)
-
-# 7. Versioning & Pipeline Prep
-
-
