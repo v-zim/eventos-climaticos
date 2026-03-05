@@ -1,0 +1,13 @@
+a partir de 2020 não existe mais uma pasta dentro do zip, somente os arquivos csv
+> acho que isso não é um problema, mas requer teste
+
+a partir de 2019 o encoding de texto mudou (não aceita caracteres especiais)
+> tbm não deve ser um problema
+
+alguns valores decimais não possuem o zero antes da vírgula (",2" onde deveria estar "0,2")
+> inserir um replace ";," para ";0,"
+
+a partir de 2019 valores que estavam como -9999 passaram a aparecer em branco - ambos os casos precisam de tratamento
+> replace "-9999" e ";;" para "null"
+
+a partir de 2019 valores de horário passaram de HH:MM para HHMM UTC
