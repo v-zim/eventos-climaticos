@@ -1,13 +1,18 @@
-﻿import downloader
-import matplotlib.pyplot as plt
-import parquet_manager as pm
-import polars
+﻿import matplotlib.pyplot as plt
+import polars as pl
+
+import downloader
+import parquet_manager
 
 PASTA_PARQUETS = "C:/Users/Administrador/Documents/Developer/Python/Projeto Eventos Climaticos/parquets"
 
 # Checar se existem novos dados desde a última atualização, e baixá-los se for o caso
-downloader.extrair_dados()
+check_download = downloader.extrair_dados_inmet()
+
+# Caso não seja possível fazer o download dos dados, utilizar arquivos locais
+if not check_download:
+    downloader.extrair_dados_locais()
 
 # Gerar DF unificado
-df = pm.gerar_df_unificado()
+df = parquet_manager.gerar_df_unificado()
 print(df.describe())
