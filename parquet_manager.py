@@ -3,6 +3,8 @@ import os
 import polars as pl
 import zipfile
 
+import util
+
 CABECALHO_PADRAO = [
     "DATA (YYYY-MM-DD)",
     "HORA (UTC)",
@@ -144,20 +146,49 @@ def gerar_df_unificado():
     # Iterar arquivos parquet na pasta
     for arquivo in Path(PASTA_PARQUETS).iterdir():
         if arquivo.is_file():
+
+            # # PARA TESTES DO SEABORN APENAS
+            # if "2024" not in arquivo.name:
+            #     continue
             
             print(f"Acessando {arquivo.name}...")
 
             # Criar df inicial
             df = pl.read_parquet(arquivo)
 
-            # Checar colunas (útil para debug)
-            # print(df.columns)
-
             dfs.append(df)
-            
-            print("Concluído.")
 
     # Unificar dfs e retornar
     df_unificado = pl.concat(dfs, how="vertical")
     return df_unificado
+
+
+def gerar_df_seaborn(df_original: pl.DataFrame) -> pl.DataFrame:
+    df = df_original
+
+    # Separar dados por sazonalidade
+    # a. Por estação do ano
+    datas = df.to_series(0).to_list()
+    indices = []
+    estacoes = []
+    periodos = []
+    for data in datas:
+        resposta = util.calcular_estacao_periodo(data)
+        indices.append(resposta.split("-")[0])
+        estacoes.append(resposta.split("-")[1])
+        periodos.append(resposta.split("-")[2])
+    
+    df = df.with_columns(
+        pl.Series(name="INDICE ESTACAO", values=indices),
+        pl.Series(name="ESTACAO DO ANO", values=estacoes), 
+        pl.Series(name="PERIODO", values=periodos)
+    )
+
+    # Lidar com formato de data e hora
+    # a. Converter data/hora em string
+    df = df.with_columns(pl.col(CABECALHO_PADRAO[1]).dt.to_string(format="%H:%M"))
+    df = df.with_columns(pl.col(CABECALHO_PADRAO[26]).dt.to_string(format="%Y-%m-%d"))
+    df = df.with_columns(pl.col(CABECALHO_PADRAO[0]).dt.to_string(format="%Y-%m-%d"))
+
+    return df
 
