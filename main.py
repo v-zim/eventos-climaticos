@@ -8,15 +8,16 @@ import parquet_manager
 
 PASTA_PARQUETS = "C:/Users/Administrador/Documents/Developer/Python/Projeto Eventos Climaticos/parquets"
 
-# # Checar se existem novos dados desde a última atualização, e baixá-los se for o caso
-# check_download = downloader.extrair_dados_inmet()
+# Checar se existem novos dados desde a última atualização, e baixá-los se for o caso
+check_download = downloader.extrair_dados_inmet()
 
-# # Caso não seja possível fazer o download dos dados, utilizar arquivos locais
-# if not check_download:
-#     downloader.extrair_dados_locais()
+# Caso não seja possível fazer o download dos dados, utilizar arquivos locais
+if not check_download:
+    downloader.extrair_dados_locais()
 
 # Gerar DF unificado
 df = parquet_manager.gerar_df_unificado()
+parquet_manager.salvar_df_unificado(df)
 
 plt.style.use('ggplot')
 plt.rcParams['figure.figsize'] = (15, 5)
@@ -43,7 +44,7 @@ df_sbn = parquet_manager.gerar_df_seaborn(df_filtrado)
 
 df_por_estacao = df_sbn \
     .group_by('PERIODO', 'INDICE ESTACAO', 'ESTACAO DO ANO', 'ESTACAO') \
-    .agg(pl.col('PRECIPITACAO TOTAL, HORARIO (mm)').mean()) \
+    .agg(pl.col('PRECIPITACAO TOTAL, HORARIO (mm)').sum()) \
     .sort('PERIODO', 'INDICE ESTACAO')
     
 print(df_por_estacao.describe())
@@ -53,4 +54,7 @@ sbn.lineplot(df_por_estacao, x='PERIODO', y='PRECIPITACAO TOTAL, HORARIO (mm)', 
 plt.show()
 
 sbn.barplot(df_por_estacao, x='PERIODO', y='PRECIPITACAO TOTAL, HORARIO (mm)', hue='ESTACAO DO ANO')
+plt.show()
+
+sbn.barplot(df_por_estacao, x='ESTACAO DO ANO', y='PRECIPITACAO TOTAL, HORARIO (mm)', hue='PERIODO')
 plt.show()

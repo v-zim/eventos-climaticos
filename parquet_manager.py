@@ -146,12 +146,7 @@ def gerar_df_unificado():
     # Iterar arquivos parquet na pasta
     for arquivo in Path(PASTA_PARQUETS).iterdir():
         if arquivo.is_file():
-
-            # # PARA TESTES DO SEABORN APENAS
-            # if "2024" not in arquivo.name:
-            #     continue
-            
-            print(f"Acessando {arquivo.name}...")
+            # print(f"Acessando {arquivo.name}...")
 
             # Criar df inicial
             df = pl.read_parquet(arquivo)
@@ -161,6 +156,16 @@ def gerar_df_unificado():
     # Unificar dfs e retornar
     df_unificado = pl.concat(dfs, how="vertical")
     return df_unificado
+
+
+def salvar_df_unificado(df_unificado: pl.DataFrame):
+    caminho_arquivo = f"{PASTA_PARQUETS}/unificado.parquet"
+
+    # Deletar parquet unificado, caso exista
+    if os.path.isfile(caminho_arquivo):
+        os.remove(caminho_arquivo)
+
+    df_unificado.write_parquet(caminho_arquivo)
 
 
 def gerar_df_seaborn(df_original: pl.DataFrame) -> pl.DataFrame:

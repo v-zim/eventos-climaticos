@@ -10,6 +10,7 @@ venv/
 parquets/
 *.parquet
 *.csv
+arquivo mais recente.txt
 
 # Jupyter
 .ipynb_checkpoints/
