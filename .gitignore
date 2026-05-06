@@ -14,7 +14,7 @@ parquets_local/*.parquet
 .ipynb_checkpoints/
 
 # Logs
-# arquivo_mais_recente.txt
+arquivo_mais_recente.txt
 *.log
 
 # OS files
