@@ -34,7 +34,8 @@ CABECALHO_PADRAO = [
     "ALTITUDE",
     "DATA DE FUNDACAO (YYYY-MM-DD)",
 ]
-PASTA_PARQUETS = "C:/Users/Administrador/Documents/Developer/Python/Projeto Eventos Climaticos/parquets"
+PASTA_PARQUETS_LOCAL = "C:/Users/Administrador/Documents/Developer/Python/Projeto Eventos Climaticos/parquets_local"
+PASTA_PARQUETS_REMOTO = "C:/Users/Administrador/Documents/Developer/Python/Projeto Eventos Climaticos/parquets_remoto"
 
 def gerar_parquet(caminho_arquivo):
     # Acessar arquivos csv dentro do arquivo zip
@@ -132,19 +133,19 @@ def gerar_parquet(caminho_arquivo):
                 continue
 
         # Criar pasta parquets, caso necessário
-        if not os.path.exists(PASTA_PARQUETS):
-            os.makedirs(PASTA_PARQUETS)
+        if not os.path.exists(PASTA_PARQUETS_LOCAL):
+            os.makedirs(PASTA_PARQUETS_LOCAL)
 
         # Salvar DataFrame como parquet
         ano = caminho_arquivo.split("/")[-1].split(".")[0]
-        df.write_parquet(f"{PASTA_PARQUETS}/{ano}.parquet")
+        salvar_df_local(df, ano)
 
 
 def gerar_df_unificado():
     dfs = []
 
     # Iterar arquivos parquet na pasta
-    for arquivo in Path(PASTA_PARQUETS).iterdir():
+    for arquivo in Path(PASTA_PARQUETS_LOCAL).iterdir():
         if arquivo.is_file():
             # print(f"Acessando {arquivo.name}...")
 
@@ -158,17 +159,7 @@ def gerar_df_unificado():
     return df_unificado
 
 
-def salvar_df_unificado(df_unificado: pl.DataFrame):
-    caminho_arquivo = f"{PASTA_PARQUETS}/unificado.parquet"
-
-    # Deletar parquet unificado, caso exista
-    if os.path.isfile(caminho_arquivo):
-        os.remove(caminho_arquivo)
-
-    df_unificado.write_parquet(caminho_arquivo)
-
-
-def gerar_df_seaborn(df_original: pl.DataFrame) -> pl.DataFrame:
+def ajustar_df(df_original: pl.DataFrame) -> pl.DataFrame:
     df = df_original
 
     # Separar dados por sazonalidade
@@ -196,4 +187,23 @@ def gerar_df_seaborn(df_original: pl.DataFrame) -> pl.DataFrame:
     df = df.with_columns(pl.col(CABECALHO_PADRAO[0]).dt.to_string(format="%Y-%m-%d"))
 
     return df
+
+
+def salvar_df(df: pl.DataFrame, nome_arquivo: str, pasta: str):
+    caminho_arquivo = f"{pasta}/{nome_arquivo}.parquet"
+
+    # Sobrescrever arquivo anterior, caso exista
+    if os.path.isfile(caminho_arquivo):
+        os.remove(caminho_arquivo)
+
+    df.write_parquet(caminho_arquivo)
+
+
+def salvar_df_local(df: pl.DataFrame, nome_arquivo: str):
+    salvar_df(df, nome_arquivo, PASTA_PARQUETS_LOCAL)
+
+    
+def salvar_df_remoto(df: pl.DataFrame, nome_arquivo: str):
+    salvar_df(df, nome_arquivo, PASTA_PARQUETS_REMOTO)
+
 

@@ -10,9 +10,8 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 import parquet_manager
 
-ARQUIVO_MAIS_RECENTE = "C:/Users/Administrador/Documents/Developer/Python/Projeto Eventos Climaticos/arquivo mais recente.txt"
+ARQUIVO_MAIS_RECENTE = "C:/Users/Administrador/Documents/Developer/Python/Projeto Eventos Climaticos/arquivo_mais_recente.txt"
 PASTA_DOWNLOADS = "C:/Users/Administrador/Downloads"
-PASTA_PARQUETS = "C:/Users/Administrador/Documents/Developer/Python/Projeto Eventos Climaticos/parquets"
 PASTA_ZIPS = "C:/Users/Administrador/Documents/Developer/Python/Projeto Eventos Climaticos - aux/zips"
 URL_INMET = "https://portal.inmet.gov.br/dadoshistoricos"
 
@@ -49,10 +48,6 @@ def extrair_dados_inmet():
                 elemento.click()
                 caminho_arquivo = f'{PASTA_DOWNLOADS}/{nome_zip}'
                 print(f"Baixando arquivo {nome_zip}...")
-
-                # Deletar parquet do ano atual, caso exista
-                if os.path.isfile(f"{PASTA_PARQUETS}/{ano}.parquet"):
-                    os.remove(f"{PASTA_PARQUETS}/{ano}.parquet")
 
                 # Aguardar conclusão do download
                 while not os.path.isfile(caminho_arquivo):

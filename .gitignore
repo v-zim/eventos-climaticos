@@ -7,15 +7,14 @@ __pycache__/
 venv/
 
 # Data
-parquets/
-*.parquet
+parquets_local/
 *.csv
-arquivo mais recente.txt
 
 # Jupyter
 .ipynb_checkpoints/
 
 # Logs
+arquivo_mais_recente.txt
 *.log
 
 # OS files
