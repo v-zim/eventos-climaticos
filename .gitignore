@@ -7,7 +7,7 @@ __pycache__/
 venv/
 
 # Data
-parquets_local/
+parquets_local/*.parquet
 *.csv
 
 # Jupyter
