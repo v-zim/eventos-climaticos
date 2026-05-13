@@ -1,15 +1,12 @@
-﻿import matplotlib.pyplot as plt
+﻿# Arquivo para gerenciar os parquets remotos
+
+import matplotlib.pyplot as plt
 import polars as pl
 import polars.selectors as cs
 import seaborn as sbn
 
-import plotly
-import plotly.express as px
-import plotly.io as pio
-
 import downloader
 import parquet_manager
-import streamlit_app
 
 # Checar se existem novos dados desde a última atualização, e baixá-los se for o caso
 check_download = downloader.extrair_dados_inmet()
@@ -38,23 +35,3 @@ df_por_estacao = df_sbn \
 # Disponibilizar DFs remotamente
 parquet_manager.salvar_df_remoto(df_filtrado, "porto_alegre_total")
 parquet_manager.salvar_df_remoto(df_por_estacao, "porto_alegre_por_estacao")
-
-# 2. Geração de gráficos
-
-plt.style.use('ggplot')
-plt.rcParams['figure.figsize'] = (15, 5)
-
-pio.renderers.default = "browser"
-fig = px.bar(data_frame=df_por_estacao, x='PERIODO', y='PRECIPITACAO TOTAL, HORARIO (mm)', color='ESTACAO DO ANO')
-# fig.show()
-
-streamlit_app.subir_grafico(fig)
-
-# sbn.lineplot(df_por_estacao, x='PERIODO', y='PRECIPITACAO TOTAL, HORARIO (mm)', hue='ESTACAO DO ANO')
-# plt.show()
-
-# sbn.barplot(df_por_estacao, x='PERIODO', y='PRECIPITACAO TOTAL, HORARIO (mm)', hue='ESTACAO DO ANO')
-# plt.show()
-
-# sbn.barplot(df_por_estacao, x='ESTACAO DO ANO', y='PRECIPITACAO TOTAL, HORARIO (mm)', hue='PERIODO')
-# plt.show()
