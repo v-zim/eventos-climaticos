@@ -3,12 +3,13 @@ import polars as pl
 import polars.selectors as cs
 import seaborn as sbn
 
+import plotly
 import plotly.express as px
 import plotly.io as pio
 
 import downloader
 import parquet_manager
-import uploader
+import streamlit_app
 
 # Checar se existem novos dados desde a última atualização, e baixá-los se for o caso
 check_download = downloader.extrair_dados_inmet()
@@ -47,7 +48,7 @@ pio.renderers.default = "browser"
 fig = px.bar(data_frame=df_por_estacao, x='PERIODO', y='PRECIPITACAO TOTAL, HORARIO (mm)', color='ESTACAO DO ANO')
 # fig.show()
 
-uploader.subir_grafico(fig)
+streamlit_app.subir_grafico(fig)
 
 # sbn.lineplot(df_por_estacao, x='PERIODO', y='PRECIPITACAO TOTAL, HORARIO (mm)', hue='ESTACAO DO ANO')
 # plt.show()
