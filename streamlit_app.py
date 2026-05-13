@@ -8,6 +8,7 @@ import polars as pl
 
 PASTA_PARQUETS = Path("parquets_remoto")
 
+# Para debug:
 # print(Path.cwd())
 # print(list(Path(".").iterdir()))
 
@@ -22,6 +23,16 @@ escolhido = st.selectbox("Selecione o arquivo desejado", parquets)
 caminho_arquivo = f"{PASTA_PARQUETS}/{escolhido}.parquet"
 df = pl.read_parquet(caminho_arquivo)
 
-# pio.renderers.default = "browser"
 fig = px.bar(data_frame=df, x='PERIODO', y='PRECIPITACAO TOTAL, HORARIO (mm)', color='ESTACAO DO ANO')
 st.plotly_chart(fig)
+
+# Ideias
+
+# Criar presets para cada tipo de tabela
+# eg df por estação -> color=estacao; df por mes -> color=mes
+# nesse caso, separar os arquivos por pasta facilitaria trocar as variaveis do grafico
+
+# Ter dfs mais genéricos permite criar gráficos usando seletores no próprio site
+# nesse caso, o tamanho dos arquivos seria um fator limitante, se seguirmos usando o github para armazenar
+# os dfs precisam ser criados já com as possibilidades de segmentação inclusas
+# eg estacao do ano, mes, dia da semana, media movel n dias, soma ultimos n dias, etc
