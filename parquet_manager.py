@@ -180,17 +180,20 @@ def ajustar_df(df_original: pl.DataFrame) -> pl.DataFrame:
         pl.col(CABECALHO_PADRAO[0]).dt.to_string(format="%Y-%m-%d"),
         pl.col(CABECALHO_PADRAO[1]).dt.to_string(format="%H:%M"),
         pl.col(CABECALHO_PADRAO[26]).dt.to_string(format="%Y-%m-%d")
-    )
+        )
     
     # Adicionar colunas criadas
-    df = df.with_columns(
-        # Elementos de data separados
+    # Elementos de data separados
+    df = df.with_columns(pl.col(CABECALHO_PADRAO[0]).str.split_exact("-", 2).struct.unnest()).rename(
+        {"field_0": "ANO", "field_1": "MES", "field_2": "DIA"}
+        )
 
-        # Estação (Período = ano, mas dezembro conta para o verão do ano seguinte)
+    # Estação (Período = ano, mas dezembro conta para o verão do ano seguinte)
+    df = df.with_columns(
         pl.Series(name="INDICE ESTACAO", values=indices),
         pl.Series(name="ESTACAO DO ANO", values=estacoes), 
         pl.Series(name="PERIODO", values=periodos)
-    )
+        )
 
     return df
 

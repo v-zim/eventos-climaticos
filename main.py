@@ -22,17 +22,17 @@ df = parquet_manager.gerar_df_unificado()
 
 # As duas formas abaixo geram o mesmo resultado
 # df_filtrado = df.filter(pl.col('ESTACAO').is_in(['PORTO ALEGRE - JARDIM BOTANICO', 'PORTO ALEGRE- BELEM NOVO']))
-df_filtrado = df.filter(pl.col('ESTACAO').str.contains('PORTO ALEGRE'))
+df_porto_alegre = df.filter(pl.col('ESTACAO').str.contains('PORTO ALEGRE'))
 
 # Ajustar DF para usar com o seaborn/plotly
-df_sbn = parquet_manager.ajustar_df(df_filtrado)
+df_porto_alegre_ajustado = parquet_manager.ajustar_df(df_porto_alegre)
 
-df_por_estacao = df_sbn \
+df_por_estacao = df_porto_alegre_ajustado \
     .group_by('PERIODO', 'INDICE ESTACAO', 'ESTACAO DO ANO', 'ESTACAO') \
     .agg(pl.col('PRECIPITACAO TOTAL, HORARIO (mm)').sum()) \
     .sort('PERIODO', 'INDICE ESTACAO')
 
 # Disponibilizar DFs remotamente
-parquet_manager.salvar_df_remoto(df_filtrado, "porto_alegre_total")
-parquet_manager.salvar_df_remoto(df_sbn, "porto_alegre_ajustado")
+parquet_manager.salvar_df_remoto(df_porto_alegre, "porto_alegre_total")
+parquet_manager.salvar_df_remoto(df_porto_alegre_ajustado, "porto_alegre_ajustado")
 parquet_manager.salvar_df_remoto(df_por_estacao, "porto_alegre_por_estacao")
