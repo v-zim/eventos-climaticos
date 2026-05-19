@@ -33,6 +33,4 @@ df_por_estacao = df_porto_alegre_ajustado \
     .sort('PERIODO', 'INDICE ESTACAO')
 
 # Disponibilizar DFs remotamente
-parquet_manager.salvar_df_remoto(df_porto_alegre, "porto_alegre_total")
 parquet_manager.salvar_df_remoto(df_porto_alegre_ajustado, "porto_alegre_ajustado")
-parquet_manager.salvar_df_remoto(df_por_estacao, "porto_alegre_por_estacao")
