@@ -29,7 +29,7 @@ df = pl.read_parquet(caminho_arquivo)
 
 # Preview da tabela
 st.write("Preview do dataframe")
-st.dataframe(df.head(5))
+st.dataframe(df.tail(5))
 
 # Seletor de colunas
 colunas = st.multiselect("Selecione as colunas desejadas:", df.columns)
@@ -44,39 +44,24 @@ df_filtrado = df.select(colunas)
 
 opcoes_agg = ["Soma", "Média"]
 
-col_string = [c for c in df_filtrado.columns if type(df_filtrado.get_column(c).dtype) == pl.String]
-col_date = [c for c in df_filtrado.columns if type(df_filtrado.get_column(c).dtype) == pl.Date]
-col_time = [c for c in df_filtrado.columns if type(df_filtrado.get_column(c).dtype) == pl.Time]
-col_float32 = [c for c in df_filtrado.columns if type(df_filtrado.get_column(c).dtype) == pl.Float32]
-
-print(col_float32)
-
-df_seletor = pl.DataFrame(
-    {
-        "Coluna": col_float32,
-        "Agregar por": ["Agregar por..." for c in col_float32]
-    },
-    strict=False
-)
-
-st.data_editor(
-    df_seletor, 
-    column_config={
-        "Agregar por": st.column_config.SelectboxColumn(
-            "Agregar por",
-            options=opcoes_agg,
-            required=True,
-            width="small",
-        )
-    }
-)
-
-
+col_texto = [c for c in df_filtrado.columns if type(df_filtrado.get_column(c).dtype) == pl.String]
+col_numerica = [c for c in df_filtrado.columns if type(df_filtrado.get_column(c).dtype) == pl.Float32]
 
 # Gráfico
-st.write("Gráfico:")
+
+agrupar = st.multiselect("Agrupar dados por:", col_texto)
+agregar = st.selectbox("Agregar dados de:", col_numerica)
+eixo_x = st.selectbox("Eixo x:", agrupar)
+series = st.selectbox("Series:", agrupar)
+
 try:
-    fig = px.bar(data_frame=df, x='PERIODO', y='PRECIPITACAO TOTAL, HORARIO (mm)', color='ESTACAO DO ANO')
+    df_grafico = df_filtrado.group_by(agrupar).agg(pl.col(agregar).sum()).sort(agrupar[0], agrupar[1])
+
+    st.write("Preview da tabela")
+    st.dataframe(df_grafico)
+
+    st.write("Gráfico:")
+    fig = px.line(data_frame=df_grafico, x=eixo_x, y=agregar, color=series)
     st.plotly_chart(fig)
 
 except:
