@@ -173,18 +173,24 @@ def ajustar_df(df_original: pl.DataFrame) -> pl.DataFrame:
         indices.append(resposta.split("-")[0])
         estacoes.append(resposta.split("-")[1])
         periodos.append(resposta.split("-")[2])
-    
+
+    # Lidar com formato de data e hora
+    # a. Converter data/hora em string
     df = df.with_columns(
+        pl.col(CABECALHO_PADRAO[0]).dt.to_string(format="%Y-%m-%d"),
+        pl.col(CABECALHO_PADRAO[1]).dt.to_string(format="%H:%M"),
+        pl.col(CABECALHO_PADRAO[26]).dt.to_string(format="%Y-%m-%d")
+    )
+    
+    # Adicionar colunas criadas
+    df = df.with_columns(
+        # Elementos de data separados
+
+        # Estação (Período = ano, mas dezembro conta para o verão do ano seguinte)
         pl.Series(name="INDICE ESTACAO", values=indices),
         pl.Series(name="ESTACAO DO ANO", values=estacoes), 
         pl.Series(name="PERIODO", values=periodos)
     )
-
-    # Lidar com formato de data e hora
-    # a. Converter data/hora em string
-    df = df.with_columns(pl.col(CABECALHO_PADRAO[1]).dt.to_string(format="%H:%M"))
-    df = df.with_columns(pl.col(CABECALHO_PADRAO[26]).dt.to_string(format="%Y-%m-%d"))
-    df = df.with_columns(pl.col(CABECALHO_PADRAO[0]).dt.to_string(format="%Y-%m-%d"))
 
     return df
 

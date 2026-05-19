@@ -34,4 +34,5 @@ df_por_estacao = df_sbn \
 
 # Disponibilizar DFs remotamente
 parquet_manager.salvar_df_remoto(df_filtrado, "porto_alegre_total")
+parquet_manager.salvar_df_remoto(df_sbn, "porto_alegre_ajustado")
 parquet_manager.salvar_df_remoto(df_por_estacao, "porto_alegre_por_estacao")
