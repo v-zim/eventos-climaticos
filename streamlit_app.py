@@ -51,8 +51,11 @@ periodo = st.date_input(
     format="DD/MM/YYYY",
 )
 
-df = df.filter(pl.col("DATA (YYYY-MM-DD)") >= str(periodo[0]))
-df = df.filter(pl.col("DATA (YYYY-MM-DD)") <= str(periodo[1]))
+try:
+    df = df.filter(pl.col("DATA (YYYY-MM-DD)") >= str(periodo[0]))
+    df = df.filter(pl.col("DATA (YYYY-MM-DD)") <= str(periodo[1]))
+except:
+    pass
 
 # Seletor de colunas
 colunas = st.multiselect("Selecione as colunas desejadas:", df.columns)
