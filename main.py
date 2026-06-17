@@ -55,5 +55,5 @@ df_por_estacao = df_ajustado \
     .sort('PERIODO', 'INDICE ESTACAO')
 
 # Disponibilizar DFs remotamente
-parquet_manager.salvar_df_remoto(df_uf_sp, "uf_sp")
-parquet_manager.salvar_df_remoto(df_ajustado, "uf_sp_precipitacao")
+parquet_manager.salvar_df_remoto(df_ajustado, "uf_sp")
+parquet_manager.salvar_df_remoto(df_por_estacao, "uf_sp_precipitacao")
