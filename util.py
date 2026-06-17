@@ -19,3 +19,13 @@ def calcular_estacao_periodo(data: date) -> str:
         case _:
             return "null"
         
+
+def padronizar_estacoes(linha: str) -> str:
+    linha_ajustada = linha
+
+    # SP
+    linha_ajustada = linha_ajustada \
+        .replace("BEBDOURO", "BEBEDOURO") \
+        .replace("SAO LUIS DO PARAITINGA", "SAO LUIZ DO PARAITINGA")
+    
+    return linha_ajustada

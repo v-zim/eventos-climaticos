@@ -59,6 +59,7 @@ def gerar_parquet(caminho_arquivo):
 
                     # Padronizar e fazer correções nos dados
                     linha_ajustada = linha_atual.replace("/", "-").replace("00 UTC", ":00").replace(";,", ";0,").replace(",", ".").replace("-9999", "null").replace(";;", ";null;").replace(";\n", "").replace("\n", "")
+                    linha_ajustada = util.padronizar_estacoes(linha_ajustada)
 
                     # Separar valores da linha
                     elementos_linha = linha_ajustada.split(";")
@@ -163,6 +164,7 @@ def ajustar_df(df_original: pl.DataFrame) -> pl.DataFrame:
     df = df_original
 
     # Separar dados por sazonalidade
+    # to-do: trocar pra trimestre
     # a. Por estação do ano
     datas = df.to_series(0).to_list()
     indices = []
