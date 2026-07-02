@@ -5,6 +5,7 @@ import polars as pl
 import polars.selectors as cs
 import seaborn as sbn
 
+import data_manager
 import downloader
 import parquet_manager
 
@@ -54,6 +55,11 @@ df_por_estacao = df_ajustado \
     .agg(pl.col('PRECIPITACAO TOTAL, HORARIO (mm)').sum()) \
     .sort('PERIODO', 'INDICE ESTACAO')
 
+df_sp_p95 = data_manager.classificar_evento_extremo(df_ajustado, 'PRECIPITACAO TOTAL, HORARIO (mm)', 0.95)
+df_sp_p90 = data_manager.classificar_evento_extremo(df_ajustado, 'PRECIPITACAO TOTAL, HORARIO (mm)', 0.90)
+
 # Disponibilizar DFs remotamente
 parquet_manager.salvar_df_remoto(df_ajustado, "uf_sp")
 parquet_manager.salvar_df_remoto(df_por_estacao, "uf_sp_precipitacao")
+parquet_manager.salvar_df_remoto(df_sp_p95, "uf_sp_p95")
+parquet_manager.salvar_df_remoto(df_sp_p90, "uf_sp_p90")
