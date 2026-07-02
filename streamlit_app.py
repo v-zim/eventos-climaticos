@@ -69,7 +69,7 @@ df_filtrado = df.select(colunas)
 # String
 
 col_texto = [c for c in df_filtrado.columns if type(df_filtrado.get_column(c).dtype) == pl.String]
-col_numerica = [c for c in df_filtrado.columns if type(df_filtrado.get_column(c).dtype) == pl.Float32]
+col_numerica = [c for c in df_filtrado.columns if type(df_filtrado.get_column(c).dtype) == pl.Float32 or type(df_filtrado.get_column(c).dtype) == pl.Int8]
 
 # Gráfico
 
