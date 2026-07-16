@@ -57,8 +57,7 @@ def incluir_precipitacao(
     for d in dias_acumulados:
         df_acumulados = df_acumulados.with_columns(
             pl.col(f"{coluna_curta}_acumulado_1d")
-            .rolling_sum(window_size=d)
-            .shift(1)
+            .rolling_sum(window_size=d, min_samples=1)
             .over('ESTACAO')
             .alias(f"{coluna_curta}_acumulado_{d}d")
         )
